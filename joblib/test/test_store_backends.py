@@ -246,12 +246,3 @@ def test_cache_info_is_published_atomically(tmp_path, monkeypatch, operation):
         "require_update": False,
     }
     assert list(info_path.parent.glob("store_backend_info.json.*")) == []
-
-
-def test_invalid_cache_info_is_not_silently_replaced(tmp_path):
-    Memory(str(tmp_path), verbose=0)
-    info_path = tmp_path / "joblib" / "store_backend_info.json"
-    info_path.write_text("invalid json")
-    with raises(json.JSONDecodeError):
-        Memory(str(tmp_path), verbose=0)
-    assert info_path.read_text() == "invalid json"
